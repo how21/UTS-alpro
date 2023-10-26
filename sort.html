@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: lightblue;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        table {
+            width: max-content;
+            margin-top: 30px;
+            border-collapse: collapse;
+            background-color: whitesmoke;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th {
+            background-color: green; 
+            color: black;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+    </style>
+    <title>Data Fetcher</title>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Masukan url</h2>
+        <input type="text" id="urlInput" placeholder="first name">
+        <button onclick="fetchData()">Submit</button>
+        <div id="dataContainer"></div>
+    </div>
+
+    <script>
+        function fetchData() {
+            var url = document.getElementById("urlInput").value;
+            var dataContainer = document.getElementById("dataContainer");
+
+            // Menggunakan AJAX untuk mengambil data dari URL yang diberikan
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    renderTable(data);
+                }
+            };
+            xhr.send();
+        }
+
+        function renderTable(data) {
+            var dataContainer = document.getElementById("dataContainer");
+            dataContainer.innerHTML = ""; // Mengosongkan kontainer sebelum menambahkan data baru
+
+            var table = document.createElement("table");
+
+            // Membuat header tabel
+            var headerRow = table.insertRow();
+            for (var key in data[0]) {
+                var headerCell = headerRow.insertCell();
+                headerCell.innerText = key;
+            }
+
+            // Menambahkan data ke tabel
+            for (var i = 0; i < data.length; i++) {
+                var row = table.insertRow();
+                for (var key in data[i]) {
+                    var cell = row.insertCell();
+                    cell.innerText = data[i][key];
+                }
+            }
+
+            // Menambahkan tabel ke kontainer
+            dataContainer.appendChild(table);
+        }
+    </script>
+</body>
+
+</html>
